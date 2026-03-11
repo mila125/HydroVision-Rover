@@ -1,65 +1,124 @@
-##pasos para instalar TerrainExplorer
+🛰️ TerrainExplorer – Mars Terrain Intelligence System
 
-Crear entorno virtual:
+TerrainExplorer es una aplicación interactiva para análisis de terreno marciano que combina datos hiperespectrales, modelos de elevación y algoritmos de aprendizaje automático para:
 
--conda create -n mars python=3.11
-  
-Activar:
+detectar minerales asociados con agua
 
--venv\Scripts\activate
-  
-Instalar requirimientos:
+analizar el riesgo del terreno para rovers
 
--conda install -r requirements.txt
-  
-Correr TerrainExplorer con:
+calcular rutas óptimas de exploración
 
--streamlit main.py
+visualizar el terreno en 2D y 3D
 
-##Cómo funciona 
+⚙️ Instalación
+1. Crear entorno de Conda
+conda create -n mars python=3.11
+2. Activar el entorno
+conda activate mars
+3. Instalar dependencias
+pip install -r requirements.txt
 
--Carga datos planetarios
+Si el proyecto usa librerías geoespaciales:
 
- Imagen hiperespectral (.img + .hdr) y Modelo de elevación DEM (.tif)
+conda install -c conda-forge gdal rasterio
+▶️ Ejecutar TerrainExplorer
+streamlit run main.py
 
--Procesa los datos
+Luego abre en tu navegador:
 
--Limpia valores inválidos
+http://localhost:8501
+🛰️ Cómo funciona el sistema
 
--Reduce dimensionalidad (PCA) para trabajar sólo con bandas que concentran una mayor variedad de datos
+El sistema realiza varias etapas para analizar el terreno marciano.
 
--Detecta minerales (K-Means). Los minerales más asociados con agua són hematita, arcilla y minerales hidratados
+1. Carga de datos planetarios
 
--Calcula pendiente para calcular el riesgo para el rover (pendiente 
- menor significa que el camino está más seguro y zonas más bajas indican valles que aumentan
-  la probabilidad de agua ahí antiguamente)
+El sistema trabaja con dos tipos de datos científicos:
 
--Planifica una ruta donde construye un grafo del terreno
+Imagen hiperespectral (.img + .hdr)
+Contiene información espectral que permite identificar minerales.
 
--Encuentra la ruta óptima evitando zonas peligrosas
+Modelo Digital de Elevación (DEM) (.tif)
+Describe la topografía del terreno marciano.
 
-##Los resultados se pueden visualizar con
+2. Procesamiento de datos
 
--mapa 2D mineralógico
+Se realiza una etapa de preprocesamiento para preparar los datos:
 
--modelo 3D del terreno
+limpieza de valores inválidos
 
--ruta del rover trazada por los grafos
+normalización de datos
 
--indicador de riesgo
+reducción de dimensionalidad mediante PCA (Principal Component Analysis)
 
-##🧪 Tecnologías utilizadas
+Esto permite trabajar con las bandas espectrales que contienen mayor variabilidad de información.
 
--Python
+3. Detección de minerales
 
--Streamlit
+Se aplica clustering no supervisado (K-Means) sobre los datos espectrales para identificar distintos tipos de minerales.
 
--NumPy
+Algunos minerales detectados pueden estar asociados con la presencia histórica de agua, como:
 
--Scikit-learn
+Hematita
 
--Plotly
+Arcillas
 
--NetworkX
+Minerales hidratados
 
--GDAL / Rasterio
+4. Análisis del terreno y riesgo
+
+A partir del DEM se calcula la pendiente del terreno, lo que permite estimar el riesgo para la navegación de un rover:
+
+pendientes altas → mayor riesgo
+
+pendientes bajas → terreno más seguro
+
+Las zonas más bajas o valles pueden indicar lugares donde el agua pudo acumularse en el pasado.
+
+5. Planificación de rutas
+
+El sistema construye un grafo del terreno, donde:
+
+cada píxel representa un nodo
+
+las conexiones representan posibles movimientos del rover
+
+Luego se calcula la ruta óptima, evitando zonas peligrosas y priorizando áreas científicamente interesantes.
+
+📊 Visualización de resultados
+
+TerrainExplorer permite explorar los resultados mediante:
+
+🗺️ Mapa mineralógico 2D
+
+Visualización de los minerales detectados a partir del clustering espectral.
+
+🌄 Modelo 3D del terreno
+
+Representación interactiva del DEM con la distribución mineralógica.
+
+🚗 Ruta óptima del rover
+
+Ruta calculada sobre el terreno mediante algoritmos de grafos.
+
+⚠️ Indicador de riesgo
+
+Estimación del riesgo operativo para el rover.
+
+🧪 Tecnologías utilizadas
+
+Python
+
+Streamlit
+
+NumPy
+
+Scikit-learn
+
+Plotly
+
+NetworkX
+
+GDAL
+
+Rasterio
